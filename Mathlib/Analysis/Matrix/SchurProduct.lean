@@ -5,7 +5,7 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.SchurProduct
+public import Mathlib.LinearAlgebra.Matrix.Vec
 public import Mathlib.Analysis.Matrix.Order
 
 /-!
