@@ -202,4 +202,23 @@ end trace
 
 end BasicProperties
 
+section conjTranspose
+
+variable {m : Type*} [Finite m] {α : Type*} [CommMonoid α] [StarMul α]
+
+/-- The conjugate transpose distributes over the Hadamard product. -/
+theorem conjTranspose_hadamard (A B : Matrix m m α) : (A ⊙ B)ᴴ = Aᴴ ⊙ Bᴴ := by
+  classical
+  have := Fintype.ofFinite m
+  ext i j
+  simp only [conjTranspose_apply, hadamard_apply, star_mul']
+
+omit [Finite m] [StarMul α] in
+/-- The transpose distributes over the Hadamard product. -/
+theorem transpose_hadamard (A B : Matrix m m α) : (A ⊙ B)ᵀ = Aᵀ ⊙ Bᵀ := by
+  ext i j
+  simp only [transpose_apply, hadamard_apply]
+
+end conjTranspose
+
 end Matrix

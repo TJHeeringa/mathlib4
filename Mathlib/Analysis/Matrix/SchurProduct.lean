@@ -24,6 +24,9 @@ definite if both inputs are). The proof uses
 * `Matrix.PosDef.hadamard`: the Hadamard product of positive definite matrices is
   positive definite.
 
+The supporting Hermitian results (`conjTranspose_hadamard`, `IsHermitian.hadamard`) are
+in `Mathlib.LinearAlgebra.Matrix.Hadamard`.
+
 ## References
 
 * [I. Schur, *Bemerkungen zur Theorie der beschränkten Bilinearformen mit unendlich vielen
