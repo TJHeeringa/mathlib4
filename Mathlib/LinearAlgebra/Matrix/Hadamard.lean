@@ -204,20 +204,17 @@ end BasicProperties
 
 section conjTranspose
 
-variable {m : Type*} [Finite m] {α : Type*} [CommMonoid α] [StarMul α]
+variable {m n : Type*} {α : Type*} [Mul α] [StarMul α]
 
-/-- The conjugate transpose distributes over the Hadamard product. -/
-theorem conjTranspose_hadamard (A B : Matrix m m α) : (A ⊙ B)ᴴ = Aᴴ ⊙ Bᴴ := by
-  classical
-  have := Fintype.ofFinite m
+/-- The conjugate transpose reverses the Hadamard product: `(A ⊙ B)ᴴ = Bᴴ ⊙ Aᴴ`. -/
+theorem conjTranspose_hadamard (A B : Matrix m n α) : (A ⊙ B)ᴴ = Bᴴ ⊙ Aᴴ := by
   ext i j
-  simp only [conjTranspose_apply, hadamard_apply, star_mul']
+  exact StarMul.star_mul (A j i) (B j i)
 
-omit [Finite m] [StarMul α] in
+omit [StarMul α] in
 /-- The transpose distributes over the Hadamard product. -/
-theorem transpose_hadamard (A B : Matrix m m α) : (A ⊙ B)ᵀ = Aᵀ ⊙ Bᵀ := by
-  ext i j
-  simp only [transpose_apply, hadamard_apply]
+theorem transpose_hadamard (A B : Matrix m n α) : (A ⊙ B)ᵀ = Aᵀ ⊙ Bᵀ :=
+  ext fun _ _ => rfl
 
 end conjTranspose
 

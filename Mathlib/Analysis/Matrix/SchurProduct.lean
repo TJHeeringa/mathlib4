@@ -41,6 +41,7 @@ namespace Matrix
 
 variable {ι : Type*} {𝕜 : Type*} [RCLike 𝕜]
 
+omit [Finite ι] [RCLike 𝕜] in
 /-- The Hadamard product of Hermitian matrices is Hermitian. -/
 theorem IsHermitian.hadamard {α : Type*} [CommMonoid α] [StarMul α] {A B : Matrix ι ι α}
     (hA : A.IsHermitian) (hB : B.IsHermitian) : (A ⊙ B).IsHermitian := by
