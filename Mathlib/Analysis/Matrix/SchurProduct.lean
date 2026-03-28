@@ -24,9 +24,6 @@ definite if both inputs are). The proof uses
 * `Matrix.PosDef.hadamard`: the Hadamard product of positive definite matrices is
   positive definite.
 
-The supporting Hermitian results (`conjTranspose_hadamard`, `IsHermitian.hadamard`) are
-in `Mathlib.LinearAlgebra.Matrix.Hadamard`.
-
 ## References
 
 * [I. Schur, *Bemerkungen zur Theorie der beschränkten Bilinearformen mit unendlich vielen
@@ -47,6 +44,7 @@ theorem IsHermitian.hadamard {α : Type*} [CommMonoid α] [StarMul α] {A B : Ma
     (hA : A.IsHermitian) (hB : B.IsHermitian) : (A ⊙ B).IsHermitian := by
   rw [IsHermitian, conjTranspose_hadamard, hB.eq, hA.eq, hadamard_comm]
 
+omit [Finite ι] in
 private lemma vec_diagonal_ne_zero [DecidableEq ι] {x : ι → 𝕜} (hx : x ≠ 0) :
     vec (diagonal x) ≠ 0 := by
   rwa [ne_eq, vec_eq_zero_iff, diagonal_eq_zero]
