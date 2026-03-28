@@ -5,7 +5,7 @@ Authors: Michael R. Douglas, Sarah Hoback, Anna Mei, Ron Nissim
 -/
 module
 
-public import Mathlib.LinearAlgebra.Matrix.Vec
+public import Mathlib.LinearAlgebra.Matrix.SchurProduct
 public import Mathlib.Analysis.Matrix.Order
 
 /-!
@@ -38,13 +38,11 @@ namespace Matrix
 
 variable {ι : Type*} {𝕜 : Type*} [RCLike 𝕜]
 
-omit [Finite ι] [RCLike 𝕜] in
 /-- The Hadamard product of Hermitian matrices is Hermitian. -/
 theorem IsHermitian.hadamard {α : Type*} [CommMonoid α] [StarMul α] {A B : Matrix ι ι α}
     (hA : A.IsHermitian) (hB : B.IsHermitian) : (A ⊙ B).IsHermitian := by
   rw [IsHermitian, conjTranspose_hadamard, hB.eq, hA.eq, hadamard_comm]
 
-omit [Finite ι] in
 private lemma vec_diagonal_ne_zero [DecidableEq ι] {x : ι → 𝕜} (hx : x ≠ 0) :
     vec (diagonal x) ≠ 0 := by
   rwa [ne_eq, vec_eq_zero_iff, diagonal_eq_zero]

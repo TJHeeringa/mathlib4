@@ -4947,6 +4947,7 @@ public import Mathlib.LinearAlgebra.Matrix.Rank
 public import Mathlib.LinearAlgebra.Matrix.Reindex
 public import Mathlib.LinearAlgebra.Matrix.RowCol
 public import Mathlib.LinearAlgebra.Matrix.SchurComplement
+public import Mathlib.LinearAlgebra.Matrix.SchurProduct
 public import Mathlib.LinearAlgebra.Matrix.SemiringInverse
 public import Mathlib.LinearAlgebra.Matrix.SesquilinearForm
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
