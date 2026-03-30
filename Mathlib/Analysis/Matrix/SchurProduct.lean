@@ -58,6 +58,27 @@ theorem PosSemidef.hadamard [Finite ι] {A B : Matrix ι ι 𝕜}
     rw [star_dotProduct_hadamard_mulVec_eq_kronecker]
     exact (hA.kronecker hB).dotProduct_mulVec_nonneg _⟩
 
+theorem PosSemidef.hadamard' {A B : Matrix ι ι 𝕜}
+    (hA : A.PosSemidef) (hB : B.PosSemidef) : (A ⊙ B).PosSemidef := by
+  classical
+  refine ⟨by rw [IsHermitian, conjTranspose_hadamard, hadamard_comm, hA.isHermitian,
+                  hB.isHermitian], fun x ↦ ?_⟩
+  let s := x.support
+  have hAs : (A.submatrix (Subtype.val : s → ι) (Subtype.val)).PosSemidef := hA.submatrix _
+  have hBs : (B.submatrix (Subtype.val : s → ι) (Subtype.val)).PosSemidef := hB.submatrix _
+  have hHads := hAs.hadamard hBs
+  let y := x.subtypeDomain (· ∈ s)
+  have hs : x.support.subtype (· ∈ s) = Finset.univ := by ext ⟨x,hx⟩; simp [s,hx]
+  simp_all only [Finset.univ_eq_attach, RCLike.star_def, hadamard_apply, ge_iff_le]
+  suffices h : x.sum (fun i xi ↦ x.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A i j * B i j) * xj) =
+             y.sum (fun i xi ↦ y.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A ↑i ↑j * B ↑i ↑j) * xj) by
+    have hy := hHads.2 y
+    rw [← submatrix_hadamard] at hy
+    rw [h]
+    exact hy
+  simp only [Finsupp.sum, y, Finsupp.support_subtypeDomain, Finsupp.subtypeDomain_apply]
+  simp_rw [hs, s, <-Finset.sum_attach x.support]
+
 /-- **Schur product theorem**: the Hadamard (entrywise) product of positive definite
 matrices is positive definite. -/
 theorem PosDef.hadamard [Finite ι] {A B : Matrix ι ι 𝕜}
@@ -68,5 +89,33 @@ theorem PosDef.hadamard [Finite ι] {A B : Matrix ι ι 𝕜}
   exact ⟨hA.isHermitian.hadamard hB.isHermitian, fun x hx => by
     rw [star_dotProduct_hadamard_mulVec_eq_kronecker]
     exact (PosDef.kronecker hA hB).dotProduct_mulVec_pos (vec_diagonal_ne_zero hx)⟩
+
+theorem PosDef.hadamard' {A B : Matrix ι ι 𝕜}
+    (hA : A.PosDef) (hB : B.PosDef) : (A ⊙ B).PosDef := by
+  classical
+  refine ⟨by rw [IsHermitian, conjTranspose_hadamard, hadamard_comm, hA.isHermitian,
+                  hB.isHermitian], fun x hx ↦ ?_⟩
+  let s := x.support
+  have hAs : (A.submatrix (Subtype.val : s → ι) (Subtype.val)).PosDef :=
+    hA.submatrix Subtype.coe_injective
+  have hBs : (B.submatrix (Subtype.val : s → ι) (Subtype.val)).PosDef :=
+    hB.submatrix Subtype.coe_injective
+  have hHads := hAs.hadamard hBs
+  let y := x.subtypeDomain (· ∈ s)
+  have hs : x.support.subtype (· ∈ s) = Finset.univ := by ext ⟨x,hx⟩; simp [s,hx]
+  have hy : y ≠ 0 := by
+    simp_rw [← Finsupp.support_nonempty_iff, y,s, Finsupp.support_subtypeDomain]
+    rw [hs]
+    nth_rw 1 [Finset.univ_nonempty_iff]
+    exact Finset.nonempty_coe_sort.mpr (Finsupp.support_nonempty_iff.mpr hx)
+  simp_all only [Finset.univ_eq_attach, RCLike.star_def, hadamard_apply]
+  suffices h : x.sum (fun i xi ↦ x.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A i j * B i j) * xj) =
+             y.sum (fun i xi ↦ y.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A ↑i ↑j * B ↑i ↑j) * xj) by
+    have hy := hHads.2 hy
+    rw [← submatrix_hadamard] at hy
+    rw [h]
+    exact hy
+  simp only [Finsupp.sum, y, Finsupp.support_subtypeDomain, Finsupp.subtypeDomain_apply]
+  simp_rw [hs, s, <-Finset.sum_attach x.support]
 
 end Matrix
