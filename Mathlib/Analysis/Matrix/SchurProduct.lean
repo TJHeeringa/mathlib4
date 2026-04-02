@@ -73,11 +73,11 @@ theorem PosSemidef.hadamard' {A B : Matrix ι ι 𝕜}
   suffices h : x.sum (fun i xi ↦ x.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A i j * B i j) * xj) =
              y.sum (fun i xi ↦ y.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A ↑i ↑j * B ↑i ↑j) * xj) by
     have hy := hHads.2 y
-    rw [← submatrix_hadamard] at hy
+    rw [←submatrix_hadamard] at hy
     rw [h]
     exact hy
   simp only [Finsupp.sum, y, Finsupp.support_subtypeDomain, Finsupp.subtypeDomain_apply]
-  simp_rw [hs, s, <-Finset.sum_attach x.support]
+  simp_rw [hs, s, ←Finset.sum_attach x.support]
 
 /-- **Schur product theorem**: the Hadamard (entrywise) product of positive definite
 matrices is positive definite. -/
@@ -104,7 +104,7 @@ theorem PosDef.hadamard' {A B : Matrix ι ι 𝕜}
   let y := x.subtypeDomain (· ∈ s)
   have hs : x.support.subtype (· ∈ s) = Finset.univ := by ext ⟨x,hx⟩; simp [s,hx]
   have hy : y ≠ 0 := by
-    simp_rw [← Finsupp.support_nonempty_iff, y,s, Finsupp.support_subtypeDomain]
+    simp_rw [←Finsupp.support_nonempty_iff, y,s, Finsupp.support_subtypeDomain]
     rw [hs]
     nth_rw 1 [Finset.univ_nonempty_iff]
     exact Finset.nonempty_coe_sort.mpr (Finsupp.support_nonempty_iff.mpr hx)
@@ -112,10 +112,10 @@ theorem PosDef.hadamard' {A B : Matrix ι ι 𝕜}
   suffices h : x.sum (fun i xi ↦ x.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A i j * B i j) * xj) =
              y.sum (fun i xi ↦ y.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A ↑i ↑j * B ↑i ↑j) * xj) by
     have hy := hHads.2 hy
-    rw [← submatrix_hadamard] at hy
+    rw [←submatrix_hadamard] at hy
     rw [h]
     exact hy
   simp only [Finsupp.sum, y, Finsupp.support_subtypeDomain, Finsupp.subtypeDomain_apply]
-  simp_rw [hs, s, <-Finset.sum_attach x.support]
+  simp_rw [hs, s, ←Finset.sum_attach x.support]
 
 end Matrix
