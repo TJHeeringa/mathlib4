@@ -104,9 +104,8 @@ theorem PosDef.hadamard' {A B : Matrix ι ι 𝕜}
   let y := x.subtypeDomain (· ∈ s)
   have hs : x.support.subtype (· ∈ s) = Finset.univ := by ext ⟨x,hx⟩; simp [s,hx]
   have hy : y ≠ 0 := by
-    simp_rw [←Finsupp.support_nonempty_iff, y,s, Finsupp.support_subtypeDomain]
-    rw [hs]
-    nth_rw 1 [Finset.univ_nonempty_iff]
+    simp_rw [←Finsupp.support_nonempty_iff, y, s, Finsupp.support_subtypeDomain]
+    rw [hs, Finset.univ_nonempty_iff]
     exact Finset.nonempty_coe_sort.mpr (Finsupp.support_nonempty_iff.mpr hx)
   simp_all only [Finset.univ_eq_attach, RCLike.star_def, hadamard_apply]
   suffices h : x.sum (fun i xi ↦ x.sum fun j xj ↦ (starRingEnd 𝕜) xi * (A i j * B i j) * xj) =
