@@ -163,8 +163,7 @@ theorem submatrix_hadamard {l o : Type*} [Mul α]
     (A B : Matrix m n α) (e : l → m) (f : o → n) :
     (A ⊙ B).submatrix e f = A.submatrix e f ⊙ B.submatrix e f := rfl
 
-theorem transpose_hadamard [Mul α] (A B : Matrix m n α) : (A ⊙ B)ᵀ = Aᵀ ⊙ Bᵀ :=
-  ext fun _ _ => rfl
+theorem transpose_hadamard [Mul α] (A B : Matrix m n α) : (A ⊙ B)ᵀ = Aᵀ ⊙ Bᵀ := rfl
 
 theorem conjTranspose_hadamard [Mul α] [StarMul α] (A B : Matrix m n α) : (A ⊙ B)ᴴ = Bᴴ ⊙ Aᴴ :=
   ext fun _ _ => StarMul.star_mul _ _
@@ -201,17 +200,5 @@ theorem dotProduct_vecMul_hadamard [DecidableEq m] [DecidableEq n] (v : m → α
 end trace
 
 end BasicProperties
-
-section conjTranspose
-
-/-- The conjugate transpose reverses the Hadamard product: `(A ⊙ B)ᴴ = Bᴴ ⊙ Aᴴ`. -/
-theorem conjTranspose_hadamard [Mul α] [StarMul α] (A B : Matrix m n α) :
-    (A ⊙ B)ᴴ = Bᴴ ⊙ Aᴴ := by
-  ext i j
-  exact StarMul.star_mul (A j i) (B j i)
-
-theorem transpose_hadamard [Mul α] (A B : Matrix m n α) : (A ⊙ B)ᵀ = Aᵀ ⊙ Bᵀ := rfl
-
-end conjTranspose
 
 end Matrix
