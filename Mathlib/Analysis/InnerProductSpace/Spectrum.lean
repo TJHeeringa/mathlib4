@@ -6,6 +6,7 @@ Authors: Heather Macbeth
 module
 
 public import Mathlib.Analysis.InnerProductSpace.Rayleigh
+public import Mathlib.Analysis.InnerProductSpace.l2Space
 public import Mathlib.Analysis.Normed.Operator.Compact.FiniteDimension
 public import Mathlib.Data.Fin.Tuple.Sort
 public import Mathlib.LinearAlgebra.Eigenspace.Charpoly
@@ -424,6 +425,8 @@ end Nonneg
 
 namespace ContinuousLinearMap
 
+section Version1
+
 variable [CompleteSpace E] {T : E →L[𝕜] E}
 
 theorem eq_zero_of_forall_hasEigenvalue_eq_zero (hT : IsCompactOperator T) (hT' : T.IsSymmetric) :
@@ -462,5 +465,42 @@ theorem finite_dimensional_eigenspace (hT : IsCompactOperator T) (μ : 𝕜) (h�
     ((mem_invtSubmodule_iff_forall_mem_of_mem _).mp (eigenspace_mem_invtSubmodule T.toLinearMap μ))
   rw [restrict_eigenspace, LinearMap.coe_smul, IsCompactOperator.smul_iff₀ hμ] at hT
   rwa [← isCompactOperator_id_iff_finiteDimensional]
+
+end Version1
+
+section Version2
+
+universe u v
+
+variable {𝕜 : Type u} [RCLike 𝕜] {E : Type v} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+  [CompleteSpace E] {T : E →L[𝕜] E}
+
+/-- A compact self-adjoint operator `T : E →L[𝕜] E` has a Hilbert basis `b` consisting of
+eigenvectors `b i` with eigenvalues `μ i`. -/
+theorem exists_eigenvectorBasis
+    (hT : IsCompactOperator T) (hT' : T.IsSymmetric) :
+    ∃ (ι : Type (max u v)) (b : HilbertBasis ι 𝕜 E) (μ : ι → 𝕜),
+      ∀ i, T (b i) = (μ i : 𝕜) • b i := by
+  set V : 𝕜 → Submodule 𝕜 E := fun ν ↦ eigenspace (T : End 𝕜 E) ν
+  choose w bν _ using fun ν ↦ exists_hilbertBasis 𝕜 (V ν)
+  let v : (Σ ν : 𝕜, w ν) → E := fun a ↦ (V a.1).subtypeₗᵢ (bν a.1 a.2)
+  have hv : Orthonormal 𝕜 v :=
+    hT'.orthogonalFamily_eigenspaces.orthonormal_sigma_orthonormal
+      (v_family := fun ν ↦ bν ν) (fun ν ↦ (bν ν).orthonormal)
+  have hsp : (Submodule.span 𝕜 (Set.range v))ᗮ = ⊥ := by
+    rw [← Submodule.orthogonal_closure, eq_bot_iff,
+      ← orthogonalComplement_iSup_eigenspaces_eq_bot hT hT']
+    refine Submodule.orthogonal_le (iSup_le fun ν x hx ↦ ?_)
+    refine (Submodule.isClosed_topologicalClosure _).mem_of_tendsto
+      (((bν ν).hasSum_repr ⟨x, hx⟩).mapL (V ν).subtypeL)
+      (Filter.Eventually.of_forall fun s ↦ Submodule.sum_mem _ fun i _ ↦ ?_)
+    exact Submodule.le_topologicalClosure _
+      (Submodule.smul_mem _ _ (Submodule.subset_span ⟨⟨ν, i⟩, rfl⟩))
+  let b : HilbertBasis (Σ ν : 𝕜, w ν) 𝕜 E := HilbertBasis.mkOfOrthogonalEqBot hv hsp
+  have hb : ⇑b = v := HilbertBasis.coe_mkOfOrthogonalEqBot hv hsp
+  refine ⟨_, b, fun a ↦ a.1, fun a ↦ ?_⟩
+  simpa [hb, v] using mem_eigenspace_iff.mp (bν a.1 a.2).2
+
+end Version2
 
 end ContinuousLinearMap
