@@ -496,16 +496,6 @@ instance instIsOrderedModule : IsOrderedModule 𝕜 (E →L[𝕜] E) where
   smul_le_smul_of_nonneg_right f hf b₁ b₂ hb := by
     rw [← coe_le_coe_iff]; exact smul_le_smul_of_nonneg_right hb (by simpa)
 
-@[simp]
-lemma adjoint_comp_self_nonneg [CompleteSpace E] [CompleteSpace F] (T : E →L[𝕜] F) :
-    0 ≤ T.adjoint ∘L T :=
-  T.isPositive_adjoint_comp_self.nonneg
-
-@[simp]
-lemma self_comp_adjoint_nonneg [CompleteSpace E] [CompleteSpace F] (T : E →L[𝕜] F) :
-    0 ≤ T ∘L T.adjoint :=
-  T.isPositive_self_comp_adjoint.nonneg
-
 end Order
 
 /-- An idempotent operator is positive if and only if it is self-adjoint. -/

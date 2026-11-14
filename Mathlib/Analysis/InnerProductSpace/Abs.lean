@@ -85,11 +85,13 @@ theorem abs_eq_cfcAbs (T : E →L[ℂ] E) : T.abs = CFC.abs T := rfl
 
 @[simp]
 protected theorem abs_eq_zero {T : E →L[ℂ] F} : T.abs = 0 ↔ T = 0 := by
-  simp [ContinuousLinearMap.abs_def, CFC.sqrt_eq_zero_iff]
+  simp [ContinuousLinearMap.abs_def,
+    CFC.sqrt_eq_zero_iff _ T.isPositive_adjoint_comp_self.nonneg]
 
 @[simp]
 theorem abs_comp_abs (T : E →L[ℂ] F) : T.abs ∘L T.abs = T† ∘L T := by
-  simp [ContinuousLinearMap.abs_def, ← mul_def, CFC.sqrt_mul_sqrt_self]
+  simp [ContinuousLinearMap.abs_def, ← mul_def,
+    CFC.sqrt_mul_sqrt_self _ T.isPositive_adjoint_comp_self.nonneg]
 
 @[simp]
 theorem norm_abs_apply (T : E →L[ℂ] F) (x : E) : ‖T.abs x‖ = ‖T x‖ := by
@@ -156,8 +158,7 @@ protected theorem abs_one : (1 : E →L[ℂ] E).abs = 1 :=
 protected theorem abs_smul {𝕜 : Type*} [RCLike 𝕜] [Module 𝕜 F] [ContinuousConstSMul 𝕜 F]
     [NormedAlgebra 𝕜 ℂ] [IsScalarTower 𝕜 ℂ F] (c : 𝕜) (T : E →L[ℂ] F) :
     (c • T).abs = ‖c‖ • T.abs := by
-  rw [ContinuousLinearMap.abs_def, CFC.sqrt_eq_iff _ _ (c • T).adjoint_comp_self_nonneg,
-    ← algebraMap_smul ℂ c T]
+  rw [ContinuousLinearMap.abs_def, CFC.sqrt_eq_iff .., ← algebraMap_smul ℂ c T]
   simp [mul_def, ← smul_assoc, Complex.mul_conj', map_smulₛₗ, sq, -algebraMap_smul]
   norm_cast
 
