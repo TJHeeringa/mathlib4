@@ -6,7 +6,7 @@ Authors: Heather Macbeth
 module
 
 public import Mathlib.Analysis.InnerProductSpace.PiL2
-public import Mathlib.Analysis.Normed.Lp.lpSpace
+public import Mathlib.Analysis.Normed.Lp.LpEquiv
 public import Mathlib.Analysis.Normed.Module.Bases
 
 /-!
@@ -522,22 +522,21 @@ protected theorem tsum_eNorm_inner_sq (b : HilbertBasis ι 𝕜 E) (x : E) :
     ∑' i, ‖⟪b i, x⟫‖ₑ ^ 2 = ‖x‖ₑ ^ 2 :=
   (b.hasSum_eNorm_inner_sq x).tsum_eq
 
--- Note: this should be `b.repr` composed with an identification of `lp (fun i : ι => 𝕜) p` with
--- `PiLp p (fun i : ι => 𝕜)` (in this case with `p = 2`), but we don't have this yet (July 2022).
 /-- A finite Hilbert basis is an orthonormal basis. -/
 protected def toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) : OrthonormalBasis ι 𝕜 E :=
-  OrthonormalBasis.mk b.orthonormal
-    (by
-      refine Eq.ge ?_
-      classical
-      have := (span 𝕜 (Finset.univ.image b : Set E)).isClosed_of_finiteDimensional
-      simpa only [Finset.coe_image, Finset.coe_univ, Set.image_univ, HilbertBasis.dense_span] using
-        this.submodule_topologicalClosure_eq.symm)
+  ⟨b.repr.trans (lpPiLpₗᵢ _ 𝕜)⟩
+
+@[simp]
+theorem repr_toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) :
+    b.toOrthonormalBasis.repr = b.repr.trans (lpPiLpₗᵢ _ 𝕜) :=
+  rfl
 
 @[simp]
 theorem coe_toOrthonormalBasis [Fintype ι] (b : HilbertBasis ι 𝕜 E) :
-    (b.toOrthonormalBasis : ι → E) = b :=
-  OrthonormalBasis.coe_mk _ _
+    (b.toOrthonormalBasis : ι → E) = b := by
+  classical
+  ext
+  simp [← OrthonormalBasis.repr_symm_single]
 
 /-- A Hilbert basis of is an unconditional Schauder basis (`UnconditionalSchauderBasis`),
 with coordinate functionals `x ↦ ⟪b i, x⟫`. The basis expansion `x = ∑' i, ⟪b i, x⟫ • b i`
