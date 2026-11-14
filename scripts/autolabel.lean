@@ -47,7 +47,6 @@ Additionally, the script does a few consistency checks:
 - it ensures all paths in specified in `AutoLabel.mathlibLabels` exist
 - It makes sure all subfolders of `Mathlib/` belong to at least one label.
   There is `AutoLabel.mathlibUnlabelled` to add exceptions for this test.
-
 -/
 
 open Lean System
@@ -222,7 +221,6 @@ def mathlibLabelData : (l : Label) → LabelData l
       "Mathlib" / "Tactic" / "Linter",
       "MathlibTest" / "Linter",
       "scripts" / "lint-style.lean",
-      "scripts" / "lint-style.py",
     ] }
   | .«t-logic» => {
     dirs := #[
@@ -261,7 +259,6 @@ def mathlibLabelData : (l : Label) → LabelData l
     ],
     exclusions := #[
       "scripts" / "lint-style.lean",
-      "scripts" / "lint-style.py",
       "scripts" / "nolints.json",
       "scripts" / "nolints-style.txt",
       "scripts" / "nolints_prime_decls.txt",
@@ -340,7 +337,7 @@ section Tests
 #guard getMatchingLabels #["scripts" / "add_deprecations.sh"] == #[.«CI»]
 #guard getMatchingLabels #["scripts" / "lint-style.lean"] == #[.«t-linter»]
 #guard getMatchingLabels #["Mathlib" / "Tactic" / "Linter" / "TextBased.lean",
-  "scripts" / "lint-style.lean", "scripts" / "lint-style.py"] == #[.«t-linter»]
+  "scripts" / "lint-style.lean"] == #[.«t-linter»]
 
 /-- Testing function to ensure the labels defined in `mathlibLabels` cover all
 subfolders of `Mathlib/`. -/
