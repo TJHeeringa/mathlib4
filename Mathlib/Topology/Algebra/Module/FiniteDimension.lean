@@ -575,6 +575,22 @@ theorem Submodule.isClosed_of_finiteDimensional
 @[deprecated (since := "2026-10-29")]
 alias Submodule.closed_of_finiteDimensional := Submodule.isClosed_of_finiteDimensional
 
+/-- If a linearly independent family spans a dense subspace of a Hausdorff topological vector
+space, then the dimension of the space is the cardinality of the family.
+
+When the family is infinite, both sides are `0` due to the junk values. -/
+theorem LinearIndependent.finrank_eq_natCard [T2Space E] {ι : Type*} {v : ι → E}
+    (hv : LinearIndependent 𝕜 v) (hd : Dense (Submodule.span 𝕜 (Set.range v) : Set E)) :
+    Module.finrank 𝕜 E = Nat.card ι := by
+  cases finite_or_infinite ι
+  · have := FiniteDimensional.span_of_finite 𝕜 (Set.finite_range v)
+    rw [(Submodule.span 𝕜 _).isClosed_of_finiteDimensional.dense_iff,
+      Submodule.coe_eq_univ] at hd
+    exact Module.finrank_eq_nat_card_basis (Basis.mk hv hd.ge)
+  · rw [Nat.card_eq_zero_of_infinite, Module.finrank_of_not_finite]
+    intro
+    exact Finite.false hv.finite
+
 /-- If `s` is a closed subspace with finite codimension, any subspace containing `s` is closed. -/
 theorem Submodule.isClosed_mono_of_finiteDimensional_quotient
     {s t : Submodule 𝕜 E} [FiniteDimensional 𝕜 (E ⧸ s)] (s_closed : IsClosed (s : Set E))
